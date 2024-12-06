@@ -1,0 +1,277 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    color: #333;
+}
+
+.dark-mode h1 {
+    color: #fff;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+select, button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dark-mode select,
+.dark-mode button {
+    background-color: #333;
+    color: white;
+    border-color: #444;
+}
+
+.legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.legend-scale {
+    width: 200px;
+    height: 20px;
+    background: linear-gradient(to right, #ff4444, #ffffff, #44ff44);
+    border-radius: 4px;
+}
+
+.dark-mode .legend-scale {
+    background: linear-gradient(to right, #ff4444, #333333, #44ff44);
+}
+
+.legend-label {
+    color: #666;
+}
+
+.dark-mode .legend-label {
+    color: #aaa;
+}
+
+#heatmap {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+}
+
+.dark-mode #heatmap {
+    background-color: #222;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.tile {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.tile:hover {
+    opacity: 0.8;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.dark-mode .tooltip {
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    display: none;
+}
+
+.error {
+    color: #ff4444;
+    text-align: center;
+    padding: 10px;
+    display: none;
+}
+
+.last-updated {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.dark-mode .last-updated {
+    color: #aaa;
+}
+
+#refreshButton {
+    margin-left: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.main-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.heatmap-container {
+    flex: 1;
+    min-width: 0;
+}
+
+.recommendations-panel {
+    width: 300px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.dark-mode .recommendations-panel {
+    background-color: #222;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.recommendations-panel h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.dark-mode .recommendations-panel h2 {
+    color: #fff;
+}
+
+.recommendation-desc {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+.dark-mode .recommendation-desc {
+    color: #aaa;
+}
+
+.recommendation-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.dark-mode .recommendation-item {
+    border-bottom-color: #444;
+}
+
+.recommendation-item:hover {
+    background-color: #f5f5f5;
+}
+
+.dark-mode .recommendation-item:hover {
+    background-color: #333;
+}
+
+.recommendation-item h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.dark-mode .recommendation-item h3 {
+    color: #fff;
+}
+
+.recommendation-item p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.dark-mode .recommendation-item p {
+    color: #aaa;
+}
+
+.recommendation-score {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.score-high {
+    background-color: #4caf50;
+    color: white;
+}
+
+.score-medium {
+    background-color: #ff9800;
+    color: white;
+}
+
+.score-low {
+    background-color: #f44336;
+    color: white;
+}
+
+.disclaimer {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    color: #856404;
+    font-size: 0.8em;
+}
+
+.dark-mode .disclaimer {
+    background-color: #2c2a1c;
+    border-color: #443d1c;
+    color: #fff3cd;
+}

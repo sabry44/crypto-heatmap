@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptocurrency Heatmap</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="heatmap-container">
+            <div class="header">
+                <h1>Top 200 Cryptocurrency Heatmap</h1>
+                <button id="darkModeToggle">🌙</button>
+            </div>
+            <div class="controls">
+                <select id="sortBy">
+                    <option value="market_cap">Market Cap</option>
+                    <option value="price_change_24h">24h Change</option>
+                    <option value="price_change_7d">7d Change</option>
+                    <option value="volume">Volume</option>
+                </select>
+                <select id="timeframe">
+                    <option value="24h">24h Change</option>
+                    <option value="7d">7d Change</option>
+                </select>
+            </div>
+            <div class="legend">
+                <span>Price Change:</span>
+                <div class="legend-scale"></div>
+                <span class="legend-label">-10%</span>
+                <span class="legend-label">0%</span>
+                <span class="legend-label">+10%</span>
+            </div>
+            <div id="loading" class="loading">Loading...</div>
+            <div id="error" class="error"></div>
+            <div id="heatmap"></div>
+            <div class="last-updated">
+                Last updated: <span id="updateTime"></span>
+                <button id="refreshButton">🔄 Refresh</button>
+            </div>
+        </div>
+        <div class="recommendations-panel">
+            <h2>Top 10 Recommendations</h2>
+            <p class="recommendation-desc">Based on market analysis, volume, and price trends:</p>
+            <div id="recommendationsList"></div>
+            <div class="disclaimer">
+                ⚠️ This is not financial advice. Always do your own research before investing.
+                Past performance does not guarantee future results.
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
