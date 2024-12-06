@@ -123,13 +123,31 @@ select, button {
     padding: 20px;
     font-size: 18px;
     display: none;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.dark-mode .loading {
+    color: #aaa;
+    background-color: #2a2a2a;
 }
 
 .error {
-    color: #ff4444;
+    color: #dc3545;
     text-align: center;
-    padding: 10px;
+    padding: 15px;
     display: none;
+    background-color: #fff;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.dark-mode .error {
+    background-color: #2a2a2a;
+    border-color: #dc3545;
 }
 
 .last-updated {

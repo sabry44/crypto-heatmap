@@ -33,7 +33,7 @@
                 <span class="legend-label">0%</span>
                 <span class="legend-label">+10%</span>
             </div>
-            <div id="loading" class="loading">Loading...</div>
+            <div id="loading" class="loading">Loading cryptocurrency data...</div>
             <div id="error" class="error"></div>
             <div id="heatmap"></div>
             <div class="last-updated">
@@ -51,6 +51,16 @@
             </div>
         </div>
     </div>
+    <script>
+        // Check if D3.js is loaded
+        window.addEventListener('load', function() {
+            if (typeof d3 === 'undefined') {
+                const error = document.getElementById('error');
+                error.style.display = 'block';
+                error.textContent = 'Error: D3.js library failed to load. Please check your internet connection.';
+            }
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

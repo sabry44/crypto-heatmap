@@ -18,16 +18,22 @@ async function fetchCryptoData() {
     error.style.display = 'none';
     
     try {
+        console.log('Fetching cryptocurrency data...');
         const timeframe = document.getElementById('timeframe').value;
         const priceChange = timeframe === '7d' ? '7d' : '24h';
         
-        const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=false&price_change_percentage=${priceChange}`);
+        const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=false&price_change_percentage=${priceChange}`;
+        console.log('API URL:', url);
+        
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('Data received:', data.length, 'coins');
         lastFetchTime = Date.now();
         
         document.getElementById('updateTime').textContent = new Date().toLocaleTimeString();
@@ -35,7 +41,7 @@ async function fetchCryptoData() {
     } catch (error) {
         console.error('Error fetching data:', error);
         error.style.display = 'block';
-        error.textContent = `Error: ${error.message}`;
+        error.textContent = `Error: ${error.message}. This might be due to CoinGecko API rate limits. Please try again in a minute.`;
         return null;
     } finally {
         loading.style.display = 'none';
@@ -43,10 +49,14 @@ async function fetchCryptoData() {
 }
 
 function createHeatmap(data) {
-    if (!data) return;
+    if (!data) {
+        console.error('No data provided to createHeatmap');
+        return;
+    }
+    console.log('Creating heatmap with', data.length, 'coins');
 
     // Clear previous content
-    d3.select('#heatmap').html('");
+    d3.select('#heatmap').html('');
 
     // Sort data based on selected criterion
     const sortBy = document.getElementById('sortBy').value;
