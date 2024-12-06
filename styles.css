@@ -321,3 +321,28 @@ select, button {
     border-color: #443d1c;
     color: #fff3cd;
 }
+
+.ai-analysis-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 20px 0;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ai-analysis-btn:hover {
+    background-color: #5a6268;
+}
+
+.dark-mode .ai-analysis-btn {
+    background-color: #495057;
+}
+
+.dark-mode .ai-analysis-btn:hover {
+    background-color: #343a40;
+}

@@ -276,11 +276,66 @@ function updateRecommendations(data) {
     });
 }
 
+function generateAIQueryText(recommendations) {
+    if (!recommendations || recommendations.length === 0) return '';
+
+    const text = recommendations.map((coin, index) => {
+        return `${index + 1}. ${coin.name} (${coin.symbol.toUpperCase()})
+   Price: $${coin.current_price.toLocaleString()}
+   24h Change: ${coin.price_change_percentage_24h?.toFixed(2) || 'N/A'}%
+   7d Change: ${coin.price_change_percentage_7d_in_currency?.toFixed(2) || 'N/A'}%
+   Market Cap: $${coin.market_cap.toLocaleString()}
+   Volume: $${coin.total_volume.toLocaleString()}`;
+    }).join('\n\n');
+
+    return `Please analyze these cryptocurrencies and provide your insights on their potential, risks, and current market position:\n\n${text}`;
+}
+
+function addAIQueryButton() {
+    const panel = document.querySelector('.recommendations-panel');
+    const disclaimer = panel.querySelector('.disclaimer');
+    
+    // Create AI Analysis button
+    const aiButton = document.createElement('button');
+    aiButton.id = 'aiAnalysisBtn';
+    aiButton.className = 'ai-analysis-btn';
+    aiButton.innerHTML = '📋 Copy for AI Analysis';
+    
+    // Insert before disclaimer
+    panel.insertBefore(aiButton, disclaimer);
+    
+    // Add click handler
+    aiButton.addEventListener('click', () => {
+        const recommendations = Array.from(document.querySelectorAll('.recommendation-item'))
+            .map(item => {
+                const symbol = item.querySelector('h3').textContent.split('.')[1].trim().split(' ')[0];
+                return cryptoData.find(coin => coin.symbol.toUpperCase() === symbol);
+            });
+        
+        const queryText = generateAIQueryText(recommendations);
+        navigator.clipboard.writeText(queryText).then(() => {
+            aiButton.innerHTML = '✓ Copied!';
+            setTimeout(() => {
+                aiButton.innerHTML = '📋 Copy for AI Analysis';
+            }, 2000);
+        });
+    });
+}
+
+// Store crypto data globally for AI analysis
+let cryptoData = [];
+
 async function updateHeatmap() {
     const data = await fetchCryptoData();
     if (data) {
+        cryptoData = data; // Store the data globally
         createHeatmap(data);
         updateRecommendations(data);
+        
+        // Add AI query button if it doesn't exist
+        if (!document.getElementById('aiAnalysisBtn')) {
+            addAIQueryButton();
+        }
     }
 }
 
