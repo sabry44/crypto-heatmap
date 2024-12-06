@@ -260,6 +260,34 @@ select, button {
     color: white;
 }
 
+.recommendation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.recommendation-reason {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 8px;
+    line-height: 1.4;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.dark-mode .recommendation-reason {
+    color: #ccc;
+    background-color: #2a2a2a;
+}
+
+.coin-stats {
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin: 8px 0;
+}
+
 .disclaimer {
     margin-top: 20px;
     padding: 10px;

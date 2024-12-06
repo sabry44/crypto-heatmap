@@ -46,7 +46,7 @@ function createHeatmap(data) {
     if (!data) return;
 
     // Clear previous content
-    d3.select('#heatmap').html('');
+    d3.select('#heatmap').html('");
 
     // Sort data based on selected criterion
     const sortBy = document.getElementById('sortBy').value;
@@ -172,6 +172,55 @@ function calculateRecommendationScore(coin) {
     return score;
 }
 
+function generateRecommendationReason(coin, score) {
+    const reasons = [];
+    
+    // Market cap analysis
+    const marketCapLog = Math.log10(coin.market_cap);
+    if (marketCapLog > 8 && marketCapLog < 11) {
+        reasons.push("Established market presence with growth potential");
+    } else if (marketCapLog >= 7) {
+        reasons.push("Emerging market player");
+    } else if (marketCapLog > 11) {
+        reasons.push("Large-cap stability");
+    }
+
+    // Volume analysis
+    const volumeToMarketCap = coin.total_volume / coin.market_cap;
+    if (volumeToMarketCap > 0.2) {
+        reasons.push("High trading activity");
+    } else if (volumeToMarketCap > 0.1) {
+        reasons.push("Healthy trading volume");
+    }
+
+    // Price movement analysis
+    const priceChange24h = coin.price_change_percentage_24h || 0;
+    const priceChange7d = coin.price_change_percentage_7d_in_currency || 0;
+
+    if (priceChange24h > 0 && priceChange24h < 15) {
+        reasons.push("Steady 24h growth");
+    }
+    if (priceChange7d > 0 && priceChange7d < 30) {
+        reasons.push("Positive weekly trend");
+    }
+
+    // Volatility analysis
+    if (Math.abs(priceChange24h) <= 5) {
+        reasons.push("Low volatility");
+    } else if (Math.abs(priceChange24h) <= 10) {
+        reasons.push("Moderate volatility");
+    }
+
+    // Market momentum
+    if (priceChange24h > 0 && priceChange7d > 0) {
+        reasons.push("Positive momentum");
+    }
+
+    // Select the top 2-3 most relevant reasons
+    let finalReasons = reasons.slice(0, Math.min(3, Math.max(2, Math.floor(score))));
+    return finalReasons.join(". ") + ".";
+}
+
 function updateRecommendations(data) {
     if (!data) return;
 
@@ -188,22 +237,30 @@ function updateRecommendations(data) {
         .slice(0, 10);
 
     // Create recommendation items
-    recommendations.forEach(coin => {
+    recommendations.forEach((coin, index) => {
         const scoreClass = coin.score >= 4 ? 'high' : coin.score >= 2 ? 'medium' : 'low';
+        const reason = generateRecommendationReason(coin, coin.score);
         
         const item = document.createElement('div');
         item.className = 'recommendation-item';
         item.innerHTML = `
-            <h3>
-                ${coin.symbol.toUpperCase()}
-                <span class="recommendation-score score-${scoreClass}">
-                    Score: ${coin.score}
-                </span>
-            </h3>
-            <p>Price: $${coin.current_price.toLocaleString()}</p>
-            <p>24h: ${coin.price_change_percentage_24h?.toFixed(2) || 'N/A'}%</p>
-            <p>7d: ${coin.price_change_percentage_7d_in_currency?.toFixed(2) || 'N/A'}%</p>
-            <p>Volume: $${(coin.total_volume / 1e6).toFixed(2)}M</p>
+            <div class="recommendation-header">
+                <h3>
+                    ${index + 1}. ${coin.symbol.toUpperCase()}
+                    <span class="recommendation-score score-${scoreClass}">
+                        Score: ${coin.score}
+                    </span>
+                </h3>
+            </div>
+            <p class="coin-stats">
+                Price: $${coin.current_price.toLocaleString()}<br>
+                24h: ${coin.price_change_percentage_24h?.toFixed(2) || 'N/A'}%<br>
+                7d: ${coin.price_change_percentage_7d_in_currency?.toFixed(2) || 'N/A'}%<br>
+                Volume: $${(coin.total_volume / 1e6).toFixed(2)}M
+            </p>
+            <p class="recommendation-reason">
+                <strong>Why:</strong> ${reason}
+            </p>
         `;
         recommendationsList.appendChild(item);
     });
