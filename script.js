@@ -279,16 +279,41 @@ function updateRecommendations(data) {
 function generateAIQueryText(recommendations) {
     if (!recommendations || recommendations.length === 0) return '';
 
+    const currentTime = new Date().toLocaleString();
+    
+    const intro = `As a cryptocurrency expert, please analyze these top 10 cryptocurrencies selected by our algorithm at ${currentTime}. For each cryptocurrency, provide:
+
+1. Short-term outlook (24h-7d)
+2. Medium-term potential (1-3 months)
+3. Key strengths and competitive advantages
+4. Main risks and concerns
+5. Target audience (traders, holders, institutions)
+6. Market sentiment analysis
+
+Here are the current metrics for each cryptocurrency:\n\n`;
+
     const text = recommendations.map((coin, index) => {
+        const marketCapBillion = (coin.market_cap / 1e9).toFixed(2);
+        const volumeMillions = (coin.total_volume / 1e6).toFixed(2);
+        
         return `${index + 1}. ${coin.name} (${coin.symbol.toUpperCase()})
-   Price: $${coin.current_price.toLocaleString()}
-   24h Change: ${coin.price_change_percentage_24h?.toFixed(2) || 'N/A'}%
-   7d Change: ${coin.price_change_percentage_7d_in_currency?.toFixed(2) || 'N/A'}%
-   Market Cap: $${coin.market_cap.toLocaleString()}
-   Volume: $${coin.total_volume.toLocaleString()}`;
+   • Current Price: $${coin.current_price.toLocaleString()}
+   • 24h Change: ${coin.price_change_percentage_24h?.toFixed(2) || 'N/A'}%
+   • 7d Change: ${coin.price_change_percentage_7d_in_currency?.toFixed(2) || 'N/A'}%
+   • Market Cap: $${marketCapBillion}B
+   • 24h Volume: $${volumeMillions}M
+   • Volume/Market Cap Ratio: ${((coin.total_volume / coin.market_cap) * 100).toFixed(2)}%`;
     }).join('\n\n');
 
-    return `Please analyze these cryptocurrencies and provide your insights on their potential, risks, and current market position:\n\n${text}`;
+    const outro = `\n\nAdditional requests:
+1. Identify any notable patterns or correlations between these cryptocurrencies
+2. Suggest potential portfolio allocation percentages for a moderate-risk investor
+3. Highlight any external factors (market events, regulations, tech developments) that could significantly impact these cryptocurrencies
+4. Provide a confidence score (1-10) for each recommendation
+
+Please structure your response in a clear, easy-to-read format with separate sections for each cryptocurrency and the additional analyses.`;
+
+    return intro + text + outro;
 }
 
 function addAIQueryButton() {
