@@ -330,20 +330,63 @@ function addAIQueryButton() {
     panel.insertBefore(aiButton, disclaimer);
     
     // Add click handler
-    aiButton.addEventListener('click', () => {
-        const recommendations = Array.from(document.querySelectorAll('.recommendation-item'))
-            .map(item => {
-                const symbol = item.querySelector('h3').textContent.split('.')[1].trim().split(' ')[0];
-                return cryptoData.find(coin => coin.symbol.toUpperCase() === symbol);
-            });
-        
-        const queryText = generateAIQueryText(recommendations);
-        navigator.clipboard.writeText(queryText).then(() => {
-            aiButton.innerHTML = '✓ Copied!';
+    aiButton.addEventListener('click', async () => {
+        try {
+            console.log('AI Analysis button clicked');
+            
+            // Get recommendations
+            const recommendations = Array.from(document.querySelectorAll('.recommendation-item'))
+                .map(item => {
+                    const symbolText = item.querySelector('h3').textContent;
+                    console.log('Found recommendation item:', symbolText);
+                    const symbol = symbolText.split('.')[1]?.trim().split(' ')[0];
+                    console.log('Extracted symbol:', symbol);
+                    return cryptoData.find(coin => coin.symbol.toUpperCase() === symbol);
+                })
+                .filter(coin => coin); // Remove any undefined entries
+            
+            console.log('Found recommendations:', recommendations.length);
+            
+            if (recommendations.length === 0) {
+                throw new Error('No recommendations found. Please wait for data to load.');
+            }
+            
+            const queryText = generateAIQueryText(recommendations);
+            console.log('Generated query text length:', queryText.length);
+            
+            // Try to copy to clipboard
+            try {
+                await navigator.clipboard.writeText(queryText);
+                aiButton.innerHTML = '✓ Copied!';
+                console.log('Successfully copied to clipboard');
+            } catch (clipboardError) {
+                console.error('Clipboard API failed, trying fallback:', clipboardError);
+                
+                // Fallback method
+                const textarea = document.createElement('textarea');
+                textarea.value = queryText;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                aiButton.innerHTML = '✓ Copied! (fallback)';
+            }
+            
+            // Reset button text after delay
             setTimeout(() => {
                 aiButton.innerHTML = '📋 Copy for AI Analysis';
             }, 2000);
-        });
+            
+        } catch (error) {
+            console.error('Error in AI Analysis:', error);
+            aiButton.innerHTML = '❌ Error - Try Again';
+            alert('Error: ' + error.message);
+            setTimeout(() => {
+                aiButton.innerHTML = '📋 Copy for AI Analysis';
+            }, 3000);
+        }
     });
 }
 
